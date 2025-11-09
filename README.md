@@ -1,27 +1,50 @@
-# 🚀 Lovable React Vite Project
+# 🌟 Team Sparkle Points
 
-This is a React project built using **Vite**, **TypeScript**, **Tailwind CSS**, and **shadcn-ui**.  
-The project is created and managed with **Lovable.dev** for quick editing, collaboration, and deployment.
+A fun and interactive **Point System Website** designed for our **Communication Session Team** to track punctuality, task completion, and engagement among members.  
+Built with 💙 using **Lovable** and integrated with **GitHub** for smooth collaboration and version control.
 
 ---
 
-## 🌐 Live Project
-🔗 **View Online:** [https://lovable.dev/projects/f76c75fe-9222-412e-80f2-5c11a4bb45fc](https://lovable.dev/projects/f76c75fe-9222-412e-80f2-5c11a4bb45fc)
+## 🚀 Project Overview
+
+**Team Sparkle Points** helps our 10-member team stay motivated and consistent by introducing a gamified reward system.  
+Each member earns or loses points based on their daily performance — like being punctual, completing tasks, or contributing in discussions.
+
+---
+
+## 🎯 Key Features
+
+✨ **Member Profiles**  
+- Each member has a profile with name, photo, and total points.  
+- Displays ranking or leaderboard among all members.
+
+🧮 **Point Management (Admin)**  
+- Admin can add, remove, or edit members.  
+- Add or subtract points based on performance.  
+- Manage all scores through an easy-to-use dashboard.
+
+👑 **Leaderboard**  
+- Shows top performers dynamically.  
+- Encourages healthy competition and consistency.
+
+🔐 **Authentication (Optional)**  
+- Admin and Member login system for role-based access.  
+- Members can view their own points, while Admin manages all.
+
+💻 **Responsive Design**  
+- Works smoothly across desktop, tablet, and mobile.  
+- Clean and modern UI created in Lovable.
 
 ---
 
 ## 🛠️ Tech Stack
-- ⚡ **Vite** – Fast build tool for React  
-- ⚛️ **React** – UI library  
-- 💅 **Tailwind CSS** – Utility-first styling  
-- 🧩 **shadcn-ui** – Prebuilt UI components  
-- 🧠 **TypeScript** – Type-safe development  
+
+- **Frontend:** Lovable (React-based)
+- **Styling:** Tailwind CSS / Custom UI Components  
+- **Backend (Future Integration):** Node.js + Express.js  
+- **Database (Planned):** MongoDB  
+- **Version Control:** Git & GitHub  
 
 ---
 
-## 💻 Run the Project Locally
-
-### 1️⃣ Clone the repository
-```bash
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
+## 🧩 Folder Structure (after setup)
