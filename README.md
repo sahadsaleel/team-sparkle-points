@@ -35,16 +35,3 @@ Each member earns or loses points based on their daily performance — like bein
 - Works smoothly across desktop, tablet, and mobile.  
 - Clean and modern UI created in Lovable.
 
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Lovable (React-based)
-- **Styling:** Tailwind CSS / Custom UI Components  
-- **Backend (Future Integration):** Node.js + Express.js  
-- **Database (Planned):** MongoDB  
-- **Version Control:** Git & GitHub  
-
----
-
-## 🧩 Folder Structure (after setup)
