@@ -4,8 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import MemberCard from '@/components/MemberCard';
 import AdminPointsDialog from '@/components/AdminPointsDialog';
+import TodaySpeakers from '@/components/TodaySpeakers';
 import { Button } from '@/components/ui/button';
-import { LogOut, Trophy, Users } from 'lucide-react';
+import { LogOut, Trophy, Users, Award } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -105,16 +106,27 @@ const Dashboard = () => {
                 <p className="text-sm text-muted-foreground">Communication Session Points</p>
               </div>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => navigate('/points-system')}>
+                <Award className="w-4 h-4 mr-2" />
+                Point System
+              </Button>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Today's Speakers Section */}
+        <div className="mb-8">
+          <TodaySpeakers />
+        </div>
+
         {/* Stats Section */}
         <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-card rounded-xl p-6 shadow-card border border-border">

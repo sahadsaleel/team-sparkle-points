@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_speakers: {
+        Row: {
+          created_at: string | null
+          id: string
+          member_ids: string[]
+          selected_date: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          member_ids: string[]
+          selected_date?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          member_ids?: string[]
+          selected_date?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -40,6 +61,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      speaker_history: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_selected_date: string
+          member_id: string
+          selection_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_selected_date: string
+          member_id: string
+          selection_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_selected_date?: string
+          member_id?: string
+          selection_count?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speaker_history_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
