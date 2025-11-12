@@ -102,7 +102,7 @@ const Dashboard = () => {
                 <Trophy className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Team Dashboard</h1>
+                <h1 className="text-2xl font-bold text-foreground">BCK228 Dashboard</h1>
                 <p className="text-sm text-muted-foreground">Communication Session Points</p>
               </div>
             </div>
@@ -111,7 +111,7 @@ const Dashboard = () => {
                 <Award className="w-4 h-4 mr-2" />
                 Point System
               </Button>
-              <Button variant="outline" onClick={handleLogout}>
+              <Button variant="outline" onClick={handleLogout} className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>

@@ -34,7 +34,7 @@ const pointReasons = [
   { label: 'Completing and uploading first (+5)', value: 'upload_first', points: 5 },
   { label: 'Uploading before 10 PM (+3)', value: 'upload_early', points: 3 },
   { label: 'No daily task for 2 days (-5)', value: 'no_task', points: -5 },
-  { label: 'Joining session on time (+1)', value: 'on_time', points: 1 },
+  { label: 'Joining session on time (+2)', value: 'on_time', points: 2 },
   { label: 'Late (5+ min without informing) (-5)', value: 'late', points: -5 },
 ];
 

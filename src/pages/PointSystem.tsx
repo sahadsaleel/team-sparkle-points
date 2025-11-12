@@ -38,7 +38,7 @@ const PointSystem = () => {
   const punctualityRules = [
     {
       rule: 'Joining session on time',
-      points: '+1',
+      points: '+2',
       icon: <UserCheck className="w-5 h-5 text-success" />,
       variant: 'success' as const,
     },
