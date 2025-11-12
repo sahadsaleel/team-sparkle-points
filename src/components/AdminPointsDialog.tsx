@@ -8,12 +8,18 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Plus, Minus } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface AdminPointsDialogProps {
   open: boolean;
@@ -24,6 +30,14 @@ interface AdminPointsDialogProps {
   onPointsUpdated: () => void;
 }
 
+const pointReasons = [
+  { label: 'Completing and uploading first (+5)', value: 'upload_first', points: 5 },
+  { label: 'Uploading before 10 PM (+3)', value: 'upload_early', points: 3 },
+  { label: 'No daily task for 2 days (-5)', value: 'no_task', points: -5 },
+  { label: 'Joining session on time (+1)', value: 'on_time', points: 1 },
+  { label: 'Late (5+ min without informing) (-5)', value: 'late', points: -5 },
+];
+
 const AdminPointsDialog = ({
   open,
   onOpenChange,
@@ -32,25 +46,34 @@ const AdminPointsDialog = ({
   currentPoints,
   onPointsUpdated,
 }: AdminPointsDialogProps) => {
-  const [points, setPoints] = useState('');
-  const [reason, setReason] = useState('');
+  const [selectedPoints, setSelectedPoints] = useState<number | null>(null);
+  const [selectedReason, setSelectedReason] = useState('');
+  const [additionalNotes, setAdditionalNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleUpdatePoints = async (add: boolean) => {
-    if (!points || parseInt(points) <= 0) {
+  const handleUpdatePoints = async () => {
+    if (selectedPoints === null) {
       toast({
         variant: 'destructive',
-        title: 'Invalid points',
-        description: 'Please enter a valid positive number',
+        title: 'Select points',
+        description: 'Please select a point value',
+      });
+      return;
+    }
+
+    if (!selectedReason) {
+      toast({
+        variant: 'destructive',
+        title: 'Select reason',
+        description: 'Please select a reason for the point change',
       });
       return;
     }
 
     setLoading(true);
 
-    const pointsValue = parseInt(points);
-    const newPoints = add ? currentPoints + pointsValue : currentPoints - pointsValue;
+    const newPoints = currentPoints + selectedPoints;
 
     // Prevent negative points
     if (newPoints < 0) {
@@ -77,10 +100,11 @@ const AdminPointsDialog = ({
     } else {
       toast({
         title: 'Points updated!',
-        description: `${add ? 'Added' : 'Subtracted'} ${pointsValue} points ${add ? 'to' : 'from'} ${memberName}`,
+        description: `${selectedPoints > 0 ? 'Added' : 'Subtracted'} ${Math.abs(selectedPoints)} points ${selectedPoints > 0 ? 'to' : 'from'} ${memberName}`,
       });
-      setPoints('');
-      setReason('');
+      setSelectedPoints(null);
+      setSelectedReason('');
+      setAdditionalNotes('');
       onPointsUpdated();
       onOpenChange(false);
     }
@@ -100,54 +124,73 @@ const AdminPointsDialog = ({
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="points">Points</Label>
-            <Input
-              id="points"
-              type="number"
-              placeholder="Enter points amount"
-              value={points}
-              onChange={(e) => setPoints(e.target.value)}
-              min="1"
-            />
+            <Label>Select Points</Label>
+            <div className="flex gap-2">
+              {[5, 3, 1].map((point) => (
+                <Button
+                  key={point}
+                  type="button"
+                  variant={selectedPoints === point ? 'default' : 'outline'}
+                  onClick={() => setSelectedPoints(point)}
+                  className="flex-1"
+                >
+                  +{point}
+                </Button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              {[-5, -3, -1].map((point) => (
+                <Button
+                  key={point}
+                  type="button"
+                  variant={selectedPoints === point ? 'destructive' : 'outline'}
+                  onClick={() => setSelectedPoints(point)}
+                  className="flex-1"
+                >
+                  {point}
+                </Button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="reason">Reason (optional)</Label>
+            <Label htmlFor="reason">Select Reason</Label>
+            <Select value={selectedReason} onValueChange={setSelectedReason}>
+              <SelectTrigger id="reason">
+                <SelectValue placeholder="Choose a reason" />
+              </SelectTrigger>
+              <SelectContent>
+                {pointReasons.map((reason) => (
+                  <SelectItem key={reason.value} value={reason.value}>
+                    {reason.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Additional Notes (optional)</Label>
             <Textarea
-              id="reason"
-              placeholder="Why are you adjusting points?"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              id="notes"
+              placeholder="Add any additional context..."
+              value={additionalNotes}
+              onChange={(e) => setAdditionalNotes(e.target.value)}
               rows={3}
             />
           </div>
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter>
           <Button
-            variant="outline"
-            onClick={() => handleUpdatePoints(false)}
-            disabled={loading}
-            className="w-full sm:w-auto"
+            onClick={handleUpdatePoints}
+            disabled={loading || selectedPoints === null || !selectedReason}
+            className="w-full"
           >
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Minus className="mr-2 h-4 w-4" />
-            )}
-            Subtract
-          </Button>
-          <Button
-            onClick={() => handleUpdatePoints(true)}
-            disabled={loading}
-            className="w-full sm:w-auto"
-          >
-            {loading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="mr-2 h-4 w-4" />
-            )}
-            Add Points
+            ) : null}
+            Update Points
           </Button>
         </DialogFooter>
       </DialogContent>

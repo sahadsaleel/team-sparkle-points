@@ -23,7 +23,7 @@ const PointSystem = () => {
     },
     {
       rule: 'Uploading before 10 PM',
-      points: '+2',
+      points: '+3',
       icon: <Clock className="w-5 h-5 text-primary" />,
       variant: 'primary' as const,
     },
@@ -38,7 +38,7 @@ const PointSystem = () => {
   const punctualityRules = [
     {
       rule: 'Joining session on time',
-      points: '+2',
+      points: '+1',
       icon: <UserCheck className="w-5 h-5 text-success" />,
       variant: 'success' as const,
     },
