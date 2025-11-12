@@ -126,7 +126,7 @@ const AdminPointsDialog = ({
           <div className="space-y-2">
             <Label>Select Points</Label>
             <div className="flex gap-2">
-              {[5, 3, 1].map((point) => (
+              {[5, 3, 2].map((point) => (
                 <Button
                   key={point}
                   type="button"
@@ -139,7 +139,7 @@ const AdminPointsDialog = ({
               ))}
             </div>
             <div className="flex gap-2">
-              {[-5, -3, -1].map((point) => (
+              {[-5, -3, -2].map((point) => (
                 <Button
                   key={point}
                   type="button"
