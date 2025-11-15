@@ -59,25 +59,16 @@ const Dashboard = () => {
     if (user) {
       fetchProfiles();
 
-      // Subscribe to realtime updates
       const channel = supabase
         .channel('profiles-changes')
         .on(
           'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'profiles',
-          },
-          () => {
-            fetchProfiles();
-          }
+          { event: '*', schema: 'public', table: 'profiles' },
+          () => fetchProfiles()
         )
         .subscribe();
 
-      return () => {
-        supabase.removeChannel(channel);
-      };
+      return () => supabase.removeChannel(channel);
     }
   }, [user]);
 
@@ -129,7 +120,11 @@ const Dashboard = () => {
                   </Button>
                 </>
               )}
-              <Button variant="outline" onClick={handleLogout} className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive">
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
@@ -219,9 +214,7 @@ const Dashboard = () => {
           <div className="text-center py-12">
             <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-foreground mb-2">No members yet</h3>
-            <p className="text-muted-foreground">
-              Be the first to join the team!
-            </p>
+            <p className="text-muted-foreground">Be the first to join the team!</p>
           </div>
         )}
       </main>
