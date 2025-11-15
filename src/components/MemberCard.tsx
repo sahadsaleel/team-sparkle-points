@@ -12,6 +12,8 @@ interface MemberCardProps {
   isCurrentUser?: boolean;
   onManagePoints?: () => void;
   showManage?: boolean;
+  yellowCards?: number;
+  redCards?: number;
 }
 
 const MemberCard = ({
@@ -22,6 +24,8 @@ const MemberCard = ({
   isCurrentUser = false,
   onManagePoints,
   showManage = false,
+  yellowCards = 0,
+  redCards = 0,
 }: MemberCardProps) => {
   const getInitials = (name: string) => {
     return name
@@ -97,6 +101,28 @@ const MemberCard = ({
               />
             </div>
           </div>
+
+          {/* Cards Display */}
+          {(yellowCards > 0 || redCards > 0) && (
+            <div className="w-full flex gap-2 justify-center">
+              {yellowCards > 0 && (
+                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-3 py-2 flex items-center gap-2">
+                  <span className="text-xl">🟨</span>
+                  <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                    {yellowCards}
+                  </span>
+                </div>
+              )}
+              {redCards > 0 && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 flex items-center gap-2">
+                  <span className="text-xl">🟥</span>
+                  <span className="text-sm font-semibold text-red-600 dark:text-red-400">
+                    {redCards}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Manage Button for Admins */}
           {showManage && onManagePoints && (

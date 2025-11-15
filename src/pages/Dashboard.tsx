@@ -4,9 +4,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import MemberCard from '@/components/MemberCard';
 import AdminPointsDialog from '@/components/AdminPointsDialog';
+import AdminCardsDialog from '@/components/AdminCardsDialog';
 import TodaySpeakers from '@/components/TodaySpeakers';
 import { Button } from '@/components/ui/button';
-import { LogOut, Trophy, Users, Award } from 'lucide-react';
+import { LogOut, Trophy, Users, Award, SquareActivity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -14,6 +15,8 @@ interface Profile {
   name: string;
   profile_picture: string | null;
   points: number;
+  yellow_cards: number;
+  red_cards: number;
 }
 
 const Dashboard = () => {
@@ -23,6 +26,7 @@ const Dashboard = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState<Profile | null>(null);
+  const [cardsDialogOpen, setCardsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -111,6 +115,12 @@ const Dashboard = () => {
                 <Award className="w-4 h-4 mr-2" />
                 Point System
               </Button>
+              {isAdmin && (
+                <Button variant="outline" onClick={() => setCardsDialogOpen(true)}>
+                  <SquareActivity className="w-4 h-4 mr-2" />
+                  Manage Cards
+                </Button>
+              )}
               <Button variant="outline" onClick={handleLogout} className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -122,7 +132,7 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Today's Speakers Section */}
+        {/* Speakers of the Day Section */}
         <div className="mb-8">
           <TodaySpeakers />
         </div>
@@ -191,6 +201,8 @@ const Dashboard = () => {
               isCurrentUser={profile.id === user?.id}
               showManage={isAdmin}
               onManagePoints={() => setSelectedMember(profile)}
+              yellowCards={profile.yellow_cards}
+              redCards={profile.red_cards}
             />
           ))}
         </div>
@@ -217,6 +229,13 @@ const Dashboard = () => {
           onPointsUpdated={fetchProfiles}
         />
       )}
+
+      {/* Admin Cards Dialog */}
+      <AdminCardsDialog
+        open={cardsDialogOpen}
+        onOpenChange={setCardsDialogOpen}
+        onCardsUpdated={fetchProfiles}
+      />
     </div>
   );
 };

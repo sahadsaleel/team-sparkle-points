@@ -42,7 +42,9 @@ export type Database = {
           name: string
           points: number
           profile_picture: string | null
+          red_cards: number
           updated_at: string
+          yellow_cards: number
         }
         Insert: {
           created_at?: string
@@ -50,7 +52,9 @@ export type Database = {
           name: string
           points?: number
           profile_picture?: string | null
+          red_cards?: number
           updated_at?: string
+          yellow_cards?: number
         }
         Update: {
           created_at?: string
@@ -58,7 +62,9 @@ export type Database = {
           name?: string
           points?: number
           profile_picture?: string | null
+          red_cards?: number
           updated_at?: string
+          yellow_cards?: number
         }
         Relationships: []
       }

@@ -185,7 +185,7 @@ const TodaySpeakers = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mic className="w-5 h-5 text-primary" />
-            Today's Speakers
+            Speakers of the Day
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -202,7 +202,7 @@ const TodaySpeakers = () => {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <Mic className="w-5 h-5 text-primary" />
-          Today's Speakers
+          Speakers of the Day
         </CardTitle>
         {isAdmin && (
           <Button
