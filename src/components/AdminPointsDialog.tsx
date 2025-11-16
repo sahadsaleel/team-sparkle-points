@@ -98,6 +98,20 @@ const AdminPointsDialog = ({
         description: error.message,
       });
     } else {
+      // Create log entry
+      const reasonLabel = pointReasons.find(r => r.value === selectedReason)?.label || selectedReason;
+      const fullReason = additionalNotes ? `${reasonLabel} - ${additionalNotes}` : reasonLabel;
+      
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      await supabase.from('admin_logs').insert({
+        member_id: memberId,
+        member_name: memberName,
+        points_changed: selectedPoints,
+        reason: fullReason,
+        admin_id: currentUser?.id || '',
+      });
+
       toast({
         title: 'Points updated!',
         description: `${selectedPoints > 0 ? 'Added' : 'Subtracted'} ${Math.abs(selectedPoints)} points ${selectedPoints > 0 ? 'to' : 'from'} ${memberName}`,

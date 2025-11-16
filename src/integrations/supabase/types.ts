@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_logs: {
+        Row: {
+          admin_id: string
+          created_at: string
+          id: string
+          member_id: string
+          member_name: string
+          points_changed: number
+          reason: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          id?: string
+          member_id: string
+          member_name: string
+          points_changed: number
+          reason: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          id?: string
+          member_id?: string
+          member_name?: string
+          points_changed?: number
+          reason?: string
+        }
+        Relationships: []
+      }
       daily_speakers: {
         Row: {
           created_at: string | null
