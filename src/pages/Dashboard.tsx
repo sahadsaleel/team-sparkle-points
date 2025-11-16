@@ -5,9 +5,10 @@ import { supabase } from '@/integrations/supabase/client';
 import MemberCard from '@/components/MemberCard';
 import AdminPointsDialog from '@/components/AdminPointsDialog';
 import AdminCardsDialog from '@/components/AdminCardsDialog';
+import { AdminLogHistoryDialog } from '@/components/AdminLogHistoryDialog';
 import TodaySpeakers from '@/components/TodaySpeakers';
 import { Button } from '@/components/ui/button';
-import { LogOut, Trophy, Users, Award, SquareActivity } from 'lucide-react';
+import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState<Profile | null>(null);
   const [cardsDialogOpen, setCardsDialogOpen] = useState(false);
+  const [logHistoryOpen, setLogHistoryOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -116,10 +118,16 @@ const Dashboard = () => {
                 Point System
               </Button>
               {isAdmin && (
-                <Button variant="outline" onClick={() => setCardsDialogOpen(true)}>
-                  <SquareActivity className="w-4 h-4 mr-2" />
-                  Manage Cards
-                </Button>
+                <>
+                  <Button variant="outline" onClick={() => setCardsDialogOpen(true)}>
+                    <SquareActivity className="w-4 h-4 mr-2" />
+                    Manage Cards
+                  </Button>
+                  <Button variant="outline" onClick={() => setLogHistoryOpen(true)}>
+                    <ScrollText className="w-4 h-4 mr-2" />
+                    Log History
+                  </Button>
+                </>
               )}
               <Button variant="outline" onClick={handleLogout} className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive">
                 <LogOut className="w-4 h-4 mr-2" />
@@ -235,6 +243,12 @@ const Dashboard = () => {
         open={cardsDialogOpen}
         onOpenChange={setCardsDialogOpen}
         onCardsUpdated={fetchProfiles}
+      />
+
+      {/* Admin Log History Dialog */}
+      <AdminLogHistoryDialog
+        open={logHistoryOpen}
+        onOpenChange={setLogHistoryOpen}
       />
     </div>
   );
