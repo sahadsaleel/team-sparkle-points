@@ -9,6 +9,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Trophy } from 'lucide-react';
 import authBackground from '@/assets/auth-background.jpg';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address').max(255),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+});
+
+const signupSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(100),
+  email: z.string().email('Invalid email address').max(255),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+});
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -20,6 +36,18 @@ const Auth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const validationResult = loginSchema.safeParse(loginData);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      toast({
+        variant: 'destructive',
+        title: 'Validation Error',
+        description: firstError.message,
+      });
+      setLoading(false);
+      return;
+    }
 
     const { error } = await supabase.auth.signInWithPassword({
       email: loginData.email,
@@ -45,6 +73,18 @@ const Auth = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const validationResult = signupSchema.safeParse(signupData);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      toast({
+        variant: 'destructive',
+        title: 'Validation Error',
+        description: firstError.message,
+      });
+      setLoading(false);
+      return;
+    }
 
     const redirectUrl = `${window.location.origin}/dashboard`;
 
