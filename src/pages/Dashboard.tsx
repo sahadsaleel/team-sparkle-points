@@ -68,7 +68,9 @@ const Dashboard = () => {
         )
         .subscribe();
 
-      return () => supabase.removeChannel(channel);
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user]);
 
