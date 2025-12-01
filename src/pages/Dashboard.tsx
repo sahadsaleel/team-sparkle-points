@@ -6,9 +6,10 @@ import MemberCard from '@/components/MemberCard';
 import AdminPointsDialog from '@/components/AdminPointsDialog';
 import AdminCardsDialog from '@/components/AdminCardsDialog';
 import { AdminLogHistoryDialog } from '@/components/AdminLogHistoryDialog';
+import { AdminManageRolesDialog } from '@/components/AdminManageRolesDialog';
 import TodaySpeakers from '@/components/TodaySpeakers';
 import { Button } from '@/components/ui/button';
-import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText } from 'lucide-react';
+import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText, UserCog } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const [selectedMember, setSelectedMember] = useState<Profile | null>(null);
   const [cardsDialogOpen, setCardsDialogOpen] = useState(false);
   const [logHistoryOpen, setLogHistoryOpen] = useState(false);
+  const [manageRolesOpen, setManageRolesOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -110,15 +112,19 @@ const Dashboard = () => {
                 <Award className="w-4 h-4 mr-2" />
                 Point System
               </Button>
+              <Button variant="outline" onClick={() => setLogHistoryOpen(true)}>
+                <ScrollText className="w-4 h-4 mr-2" />
+                Log History
+              </Button>
               {isAdmin && (
                 <>
                   <Button variant="outline" onClick={() => setCardsDialogOpen(true)}>
                     <SquareActivity className="w-4 h-4 mr-2" />
                     Manage Cards
                   </Button>
-                  <Button variant="outline" onClick={() => setLogHistoryOpen(true)}>
-                    <ScrollText className="w-4 h-4 mr-2" />
-                    Log History
+                  <Button variant="outline" onClick={() => setManageRolesOpen(true)}>
+                    <UserCog className="w-4 h-4 mr-2" />
+                    Manage Roles
                   </Button>
                 </>
               )}
@@ -244,6 +250,12 @@ const Dashboard = () => {
       <AdminLogHistoryDialog
         open={logHistoryOpen}
         onOpenChange={setLogHistoryOpen}
+      />
+
+      {/* Admin Manage Roles Dialog */}
+      <AdminManageRolesDialog
+        open={manageRolesOpen}
+        onOpenChange={setManageRolesOpen}
       />
     </div>
   );

@@ -20,6 +20,9 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { z } from 'zod';
+
+const pointsSchema = z.number().int().min(-100).max(100);
 
 interface AdminPointsDialogProps {
   open: boolean;
@@ -58,6 +61,16 @@ const AdminPointsDialog = ({
         variant: 'destructive',
         title: 'Select points',
         description: 'Please select a point value',
+      });
+      return;
+    }
+
+    const validationResult = pointsSchema.safeParse(selectedPoints);
+    if (!validationResult.success) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid points',
+        description: 'Points must be between -100 and 100',
       });
       return;
     }
