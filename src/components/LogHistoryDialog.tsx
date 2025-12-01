@@ -5,12 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
-interface AdminLogHistoryDialogProps {
+interface LogHistoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-interface AdminLog {
+interface Log {
   id: string;
   member_name: string;
   points_changed: number;
@@ -18,8 +18,8 @@ interface AdminLog {
   created_at: string;
 }
 
-export const AdminLogHistoryDialog = ({ open, onOpenChange }: AdminLogHistoryDialogProps) => {
-  const [logs, setLogs] = useState<AdminLog[]>([]);
+export const LogHistoryDialog = ({ open, onOpenChange }: LogHistoryDialogProps) => {
+  const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -32,14 +32,12 @@ export const AdminLogHistoryDialog = ({ open, onOpenChange }: AdminLogHistoryDia
   const fetchTodayLogs = async () => {
     try {
       setLoading(true);
-      const today = new Date().toISOString().split('T')[0];
-      
+
       const { data, error } = await supabase
         .from('admin_logs')
         .select('*')
-        .gte('created_at', `${today}T00:00:00`)
-        .lte('created_at', `${today}T23:59:59`)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (error) throw error;
       setLogs(data || []);
@@ -59,9 +57,9 @@ export const AdminLogHistoryDialog = ({ open, onOpenChange }: AdminLogHistoryDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Admin Log History - Today</DialogTitle>
+          <DialogTitle>Log History</DialogTitle>
         </DialogHeader>
-        
+
         <div className="flex-1 overflow-auto">
           {loading ? (
             <div className="text-center py-8">Loading logs...</div>

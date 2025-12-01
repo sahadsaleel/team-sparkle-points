@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserCog } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface AdminManageRolesDialogProps {
+interface ManageRolesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -20,7 +20,7 @@ interface UserRole {
   };
 }
 
-export const AdminManageRolesDialog = ({ open, onOpenChange }: AdminManageRolesDialogProps) => {
+export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps) => {
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -34,26 +34,33 @@ export const AdminManageRolesDialog = ({ open, onOpenChange }: AdminManageRolesD
   const fetchUserRoles = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+
+      // Fetch all profiles
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, name')
+        .order('name');
+
+      if (profilesError) throw profilesError;
+
+      // Fetch all roles
+      const { data: roles, error: rolesError } = await supabase
         .from('user_roles')
-        .select(`
-          id,
-          user_id,
-          role,
-          profiles!inner(name)
-        `)
-        .order('profiles(name)');
+        .select('user_id, role');
 
-      if (error) throw error;
+      if (rolesError) throw rolesError;
 
-      const formatted = data?.map((item: any) => ({
-        id: item.id,
-        user_id: item.user_id,
-        role: item.role,
-        profile: {
-          name: item.profiles.name
-        }
-      })) || [];
+      const formatted = profiles?.map((profile) => {
+        const roleData = roles?.find((r) => r.user_id === profile.id);
+        return {
+          id: roleData?.id || `temp-${profile.id}`, // Use role ID if exists, else temp
+          user_id: profile.id,
+          role: (roleData?.role || 'member') as 'admin' | 'member',
+          profile: {
+            name: profile.name
+          }
+        };
+      }) || [];
 
       setUserRoles(formatted);
     } catch (error) {
@@ -70,12 +77,29 @@ export const AdminManageRolesDialog = ({ open, onOpenChange }: AdminManageRolesD
 
   const handleRoleChange = async (userId: string, newRole: 'admin' | 'member') => {
     try {
-      const { error } = await supabase
+      // Check if role exists
+      const { data: existingRole, error: fetchError } = await supabase
         .from('user_roles')
-        .update({ role: newRole })
-        .eq('user_id', userId);
+        .select('id')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (fetchError) throw fetchError;
+
+      if (existingRole) {
+        // Update
+        const { error } = await supabase
+          .from('user_roles')
+          .update({ role: newRole })
+          .eq('user_id', userId); // Use user_id for safety
+        if (error) throw error;
+      } else {
+        // Insert
+        const { error } = await supabase
+          .from('user_roles')
+          .insert({ user_id: userId, role: newRole });
+        if (error) throw error;
+      }
 
       toast({
         title: 'Success',
@@ -83,11 +107,11 @@ export const AdminManageRolesDialog = ({ open, onOpenChange }: AdminManageRolesD
       });
 
       fetchUserRoles();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating role:', error);
       toast({
         title: 'Error',
-        description: 'Failed to update role',
+        description: error.message || 'Failed to update role',
         variant: 'destructive',
       });
     }

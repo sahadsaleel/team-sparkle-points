@@ -5,9 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import MemberCard from '@/components/MemberCard';
 import AdminPointsDialog from '@/components/AdminPointsDialog';
 import AdminCardsDialog from '@/components/AdminCardsDialog';
-import { AdminLogHistoryDialog } from '@/components/AdminLogHistoryDialog';
-import { AdminManageRolesDialog } from '@/components/AdminManageRolesDialog';
-import TodaySpeakers from '@/components/TodaySpeakers';
+import { LogHistoryDialog } from '@/components/LogHistoryDialog';
+import { ManageRolesDialog } from '@/components/ManageRolesDialog';
+import { SpeakersOfTheDay } from '@/components/SpeakersOfTheDay';
 import { Button } from '@/components/ui/button';
 import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText, UserCog } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -93,45 +93,61 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="border-b border-border/40 bg-card/80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
+        <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-primary-foreground" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 transition-transform hover:scale-105">
+                <Trophy className="w-7 h-7 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">BCK228 Dashboard</h1>
+                <h1 className="text-2xl font-bold text-foreground tracking-tight">BCK228 Dashboard</h1>
                 <p className="text-sm text-muted-foreground">Communication Session Points</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => navigate('/points-system')}>
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/points-system')}
+                className="hover:bg-primary/10 hover:text-primary transition-all"
+              >
                 <Award className="w-4 h-4 mr-2" />
                 Point System
               </Button>
-              <Button variant="outline" onClick={() => setLogHistoryOpen(true)}>
+              <Button
+                variant="ghost"
+                onClick={() => setLogHistoryOpen(true)}
+                className="hover:bg-primary/10 hover:text-primary transition-all"
+              >
                 <ScrollText className="w-4 h-4 mr-2" />
                 Log History
               </Button>
               {isAdmin && (
                 <>
-                  <Button variant="outline" onClick={() => setCardsDialogOpen(true)}>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setCardsDialogOpen(true)}
+                    className="hover:bg-primary/10 hover:text-primary transition-all"
+                  >
                     <SquareActivity className="w-4 h-4 mr-2" />
                     Manage Cards
                   </Button>
-                  <Button variant="outline" onClick={() => setManageRolesOpen(true)}>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setManageRolesOpen(true)}
+                    className="hover:bg-primary/10 hover:text-primary transition-all"
+                  >
                     <UserCog className="w-4 h-4 mr-2" />
                     Manage Roles
                   </Button>
                 </>
               )}
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={handleLogout}
-                className="hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+                className="hover:bg-destructive/10 hover:text-destructive transition-all"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -145,47 +161,47 @@ const Dashboard = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Speakers of the Day Section */}
         <div className="mb-8">
-          <TodaySpeakers />
+          <SpeakersOfTheDay />
         </div>
 
         {/* Stats Section */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="group bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-lg border border-border/50 hover:shadow-xl hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Users className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Members</p>
-                <p className="text-2xl font-bold text-foreground">{profiles.length}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Members</p>
+                <p className="text-3xl font-bold text-foreground">{profiles.length}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-accent" />
+          <div className="group bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-lg border border-border/50 hover:shadow-xl hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Trophy className="w-7 h-7 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Top Score</p>
-                <p className="text-2xl font-bold text-foreground">
+                <p className="text-sm text-muted-foreground font-medium">Top Score</p>
+                <p className="text-3xl font-bold text-foreground">
                   {profiles[0]?.points || 0}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-success" />
+          <div className="group bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-lg border border-border/50 hover:shadow-xl hover:border-primary/30 transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Trophy className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground font-medium">
                   {isAdmin ? 'Your Role' : 'Your Rank'}
                 </p>
-                <p className="text-2xl font-bold text-foreground">
+                <p className="text-3xl font-bold text-foreground">
                   {isAdmin
                     ? 'Admin'
                     : `#${profiles.findIndex((p) => p.id === user?.id) + 1}`}
@@ -246,14 +262,14 @@ const Dashboard = () => {
         onCardsUpdated={fetchProfiles}
       />
 
-      {/* Admin Log History Dialog */}
-      <AdminLogHistoryDialog
+      {/* Log History Dialog */}
+      <LogHistoryDialog
         open={logHistoryOpen}
         onOpenChange={setLogHistoryOpen}
       />
 
-      {/* Admin Manage Roles Dialog */}
-      <AdminManageRolesDialog
+      {/* Manage Roles Dialog */}
+      <ManageRolesDialog
         open={manageRolesOpen}
         onOpenChange={setManageRolesOpen}
       />
