@@ -8,8 +8,9 @@ import AdminCardsDialog from '@/components/AdminCardsDialog';
 import { LogHistoryDialog } from '@/components/LogHistoryDialog';
 import { ManageRolesDialog } from '@/components/ManageRolesDialog';
 import { SpeakersOfTheDay } from '@/components/SpeakersOfTheDay';
+import { ResetDataDialog } from '@/components/ResetDataDialog';
 import { Button } from '@/components/ui/button';
-import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText, UserCog } from 'lucide-react';
+import { LogOut, Trophy, Users, Award, SquareActivity, ScrollText, UserCog, RotateCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -31,6 +32,7 @@ const Dashboard = () => {
   const [cardsDialogOpen, setCardsDialogOpen] = useState(false);
   const [logHistoryOpen, setLogHistoryOpen] = useState(false);
   const [manageRolesOpen, setManageRolesOpen] = useState(false);
+  const [resetDataOpen, setResetDataOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -141,6 +143,14 @@ const Dashboard = () => {
                   >
                     <UserCog className="w-4 h-4 mr-2" />
                     Manage Roles
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setResetDataOpen(true)}
+                    className="hover:bg-primary/10 hover:text-primary transition-all"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Reset Data
                   </Button>
                 </>
               )}
@@ -272,6 +282,13 @@ const Dashboard = () => {
       <ManageRolesDialog
         open={manageRolesOpen}
         onOpenChange={setManageRolesOpen}
+      />
+
+      {/* Reset Data Dialog */}
+      <ResetDataDialog
+        open={resetDataOpen}
+        onOpenChange={setResetDataOpen}
+        onDataReset={fetchProfiles}
       />
     </div>
   );
