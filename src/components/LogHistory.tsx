@@ -35,6 +35,7 @@ export const LogHistory = () => {
                     .limit(50);
 
                 if (error) throw error;
+
                 setLogs(data || []);
             } catch (error) {
                 console.error("Error fetching logs:", error);
@@ -62,6 +63,7 @@ export const LogHistory = () => {
                     Log History
                 </CardTitle>
             </CardHeader>
+
             <CardContent>
                 <div className="rounded-md border">
                     <Table>
@@ -73,23 +75,41 @@ export const LogHistory = () => {
                                 <TableHead>Reason</TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
                             {logs.length > 0 ? (
                                 logs.map((log) => (
                                     <TableRow key={log.id}>
                                         <TableCell className="whitespace-nowrap">
-                                            {formatInTimeZone(new Date(log.created_at), "MMM d, HH:mm", { timeZone: "Asia/Kolkata" })}
+                                            {formatInTimeZone(
+                                                new Date(log.created_at),
+                                                "Asia/Kolkata",
+                                                "MMM d, HH:mm"
+                                            )}
                                         </TableCell>
+
                                         <TableCell>{log.member_name}</TableCell>
-                                        <TableCell className={log.points_changed > 0 ? "text-green-600" : "text-red-600"}>
-                                            {log.points_changed > 0 ? "+" : ""}{log.points_changed}
+
+                                        <TableCell
+                                            className={
+                                                log.points_changed > 0
+                                                    ? "text-green-600"
+                                                    : "text-red-600"
+                                            }
+                                        >
+                                            {log.points_changed > 0 ? "+" : ""}
+                                            {log.points_changed}
                                         </TableCell>
+
                                         <TableCell>{log.reason}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-4 text-muted-foreground">
+                                    <TableCell
+                                        colSpan={4}
+                                        className="text-center py-4 text-muted-foreground"
+                                    >
                                         No logs found
                                     </TableCell>
                                 </TableRow>
