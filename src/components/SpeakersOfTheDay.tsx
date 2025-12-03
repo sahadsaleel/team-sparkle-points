@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { Loader2, Mic } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,7 +19,8 @@ export const SpeakersOfTheDay = () => {
   useEffect(() => {
     const fetchAndSelectSpeakers = async () => {
       try {
-        const today = format(new Date(), "yyyy-MM-dd");
+        // Use IST timezone for date to match server expectations
+        const today = formatInTimeZone(new Date(), "Asia/Kolkata", "yyyy-MM-dd");
 
         // 1. Check if speakers are already selected for today
         const { data: existingDaily, error: fetchError } = await supabase
@@ -64,7 +65,7 @@ export const SpeakersOfTheDay = () => {
           // Exclude those who spoke in the last 14 days
           const twoWeeksAgo = new Date();
           twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-          const cutoffDate = format(twoWeeksAgo, "yyyy-MM-dd");
+          const cutoffDate = formatInTimeZone(twoWeeksAgo, "Asia/Kolkata", "yyyy-MM-dd");
 
           let candidates = allMembers.filter(m => {
             const h = history?.find(h => h.member_id === m.id);
