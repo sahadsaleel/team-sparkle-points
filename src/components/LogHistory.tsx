@@ -81,11 +81,22 @@ export const LogHistory = () => {
                                 logs.map((log) => (
                                     <TableRow key={log.id}>
                                         <TableCell className="whitespace-nowrap">
-                                            {formatInTimeZone(
-                                                new Date(log.created_at),
-                                                "Asia/Kolkata",
-                                                "MMM d, HH:mm"
-                                            )}
+                                            <div className="flex flex-col">
+                                                <span>
+                                                    {formatInTimeZone(
+                                                        new Date(log.created_at),
+                                                        "Asia/Kolkata",
+                                                        "hh:mm a"
+                                                    )}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    {formatInTimeZone(
+                                                        new Date(log.created_at),
+                                                        "Asia/Kolkata",
+                                                        "dd-MM-yyyy"
+                                                    )}
+                                                </span>
+                                            </div>
                                         </TableCell>
 
                                         <TableCell>{log.member_name}</TableCell>
