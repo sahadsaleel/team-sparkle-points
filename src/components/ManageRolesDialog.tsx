@@ -12,12 +12,10 @@ interface ManageRolesDialogProps {
 }
 
 interface UserRole {
-  id: string;
   user_id: string;
   role: 'admin' | 'member';
-  profile: {
-    name: string;
-  };
+  name: string;
+  role_id: string | null;
 }
 
 export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps) => {
@@ -26,16 +24,14 @@ export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps
   const { toast } = useToast();
 
   useEffect(() => {
-    if (open) {
-      fetchUserRoles();
-    }
+    if (open) fetchUserRoles();
   }, [open]);
 
   const fetchUserRoles = async () => {
     try {
       setLoading(true);
 
-      // Fetch all profiles
+      // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('id, name')
@@ -43,24 +39,24 @@ export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps
 
       if (profilesError) throw profilesError;
 
-      // Fetch all roles
+      // Fetch roles
       const { data: roles, error: rolesError } = await supabase
         .from('user_roles')
-        .select('user_id, role');
+        .select('id, user_id, role');
 
       if (rolesError) throw rolesError;
 
-      const formatted = profiles?.map((profile) => {
-        const roleData = roles?.find((r) => r.user_id === profile.id);
+      // Merge profiles + roles
+      const formatted: UserRole[] = profiles.map((p) => {
+        const roleRow = roles?.find((r) => r.user_id === p.id);
+
         return {
-          id: roleData?.id || `temp-${profile.id}`, // Use role ID if exists, else temp
-          user_id: profile.id,
-          role: (roleData?.role || 'member') as 'admin' | 'member',
-          profile: {
-            name: profile.name
-          }
+          user_id: p.id,
+          name: p.name,
+          role: (roleRow?.role || 'member') as 'admin' | 'member',
+          role_id: roleRow?.id || null
         };
-      }) || [];
+      });
 
       setUserRoles(formatted);
     } catch (error) {
@@ -77,7 +73,7 @@ export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps
 
   const handleRoleChange = async (userId: string, newRole: 'admin' | 'member') => {
     try {
-      // Check if role exists
+      // Check if user already has a role row
       const { data: existingRole, error: fetchError } = await supabase
         .from('user_roles')
         .select('id')
@@ -87,17 +83,19 @@ export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps
       if (fetchError) throw fetchError;
 
       if (existingRole) {
-        // Update
+        // Update role
         const { error } = await supabase
           .from('user_roles')
           .update({ role: newRole })
-          .eq('user_id', userId); // Use user_id for safety
+          .eq('user_id', userId);
+
         if (error) throw error;
       } else {
-        // Insert
+        // Insert new role
         const { error } = await supabase
           .from('user_roles')
           .insert({ user_id: userId, role: newRole });
+
         if (error) throw error;
       }
 
@@ -133,21 +131,23 @@ export const ManageRolesDialog = ({ open, onOpenChange }: ManageRolesDialogProps
           ) : userRoles.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">No users found</div>
           ) : (
-            userRoles.map((userRole) => (
+            userRoles.map((user) => (
               <div
-                key={userRole.id}
+                key={user.user_id}
                 className="flex items-center justify-between p-4 border rounded-lg bg-card"
               >
                 <div className="flex-1">
-                  <p className="font-medium">{userRole.profile.name}</p>
+                  <p className="font-medium">{user.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    Current role: <span className="font-medium">{userRole.role}</span>
+                    Current role: <span className="font-medium">{user.role}</span>
                   </p>
                 </div>
 
                 <Select
-                  value={userRole.role}
-                  onValueChange={(value) => handleRoleChange(userRole.user_id, value as 'admin' | 'member')}
+                  value={user.role}
+                  onValueChange={(value) =>
+                    handleRoleChange(user.user_id, value as 'admin' | 'member')
+                  }
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />

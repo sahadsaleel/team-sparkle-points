@@ -9,7 +9,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { History, Loader2 } from "lucide-react";
 
 interface Log {
@@ -78,7 +78,7 @@ export const LogHistory = () => {
                                 logs.map((log) => (
                                     <TableRow key={log.id}>
                                         <TableCell className="whitespace-nowrap">
-                                            {format(new Date(log.created_at), "MMM d, HH:mm")}
+                                            {formatInTimeZone(new Date(log.created_at), "MMM d, HH:mm", { timeZone: "Asia/Kolkata" })}
                                         </TableCell>
                                         <TableCell>{log.member_name}</TableCell>
                                         <TableCell className={log.points_changed > 0 ? "text-green-600" : "text-red-600"}>
