@@ -80,7 +80,7 @@ export const LogHistoryDialog = ({ open, onOpenChange }: LogHistoryDialogProps) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Log History (IST)</DialogTitle>
+          <DialogTitle>Log History</DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 overflow-auto max-h-[65vh]">
