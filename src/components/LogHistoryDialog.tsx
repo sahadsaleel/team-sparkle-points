@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { formatInTimeZone } from 'date-fns-tz';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 
 interface LogHistoryDialogProps {
   open: boolean;
@@ -78,18 +78,18 @@ export const LogHistoryDialog = ({ open, onOpenChange }: LogHistoryDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Log History (IST)</DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 h-[60vh] pr-4">
+        <div className="flex-1 overflow-auto max-h-[65vh]">
           {loading ? (
             <div className="text-center py-8">Loading logs...</div>
           ) : logs.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">No logs found</div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-6 pr-2">
               {sortedDates.map((date) => (
                 <div key={date} className="border border-border rounded-lg overflow-hidden">
                   <div className="bg-muted/50 px-4 py-2 font-semibold text-foreground border-b border-border">
@@ -123,7 +123,7 @@ export const LogHistoryDialog = ({ open, onOpenChange }: LogHistoryDialogProps) 
               ))}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );
