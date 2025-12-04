@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle, Clock, Clipboard, UserCheck, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Clock, Clipboard, UserCheck, XCircle, Trophy } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -47,6 +47,21 @@ const PointSystem = () => {
       points: '-5',
       icon: <XCircle className="w-5 h-5 text-destructive" />,
       variant: 'destructive' as const,
+    },
+  ];
+
+  const quizRules = [
+    {
+      rule: 'Quiz Winner',
+      points: '+5',
+      icon: <Trophy className="w-5 h-5 text-success" />,
+      variant: 'success' as const,
+    },
+    {
+      rule: 'Quiz Second Place',
+      points: '+2',
+      icon: <Trophy className="w-5 h-5 text-primary" />,
+      variant: 'primary' as const,
     },
   ];
 
@@ -161,8 +176,51 @@ const PointSystem = () => {
             </CardContent>
           </Card>
 
+          {/* Quiz Game Section */}
+          <Card className="border-border bg-card/50 backdrop-blur-sm animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="w-6 h-6 text-primary" />
+                🎯 Quiz Game
+              </CardTitle>
+              <CardDescription>
+                Points for daily WhatsApp quiz game
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px]"></TableHead>
+                    <TableHead>Rule</TableHead>
+                    <TableHead className="text-right">Points</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {quizRules.map((item, index) => (
+                    <TableRow key={index} className="hover:bg-accent/20">
+                      <TableCell>{item.icon}</TableCell>
+                      <TableCell className="font-medium">{item.rule}</TableCell>
+                      <TableCell className="text-right">
+                        <span
+                          className={`font-bold ${
+                            item.variant === 'success'
+                              ? 'text-success'
+                              : 'text-primary'
+                          }`}
+                        >
+                          {item.points}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
           {/* Summary Card */}
-          <Card className="border-border bg-gradient-to-br from-primary/10 to-accent/10 animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <Card className="border-border bg-gradient-to-br from-primary/10 to-accent/10 animate-fade-in" style={{ animationDelay: '300ms' }}>
             <CardHeader>
               <CardTitle>💡 Quick Tips</CardTitle>
             </CardHeader>

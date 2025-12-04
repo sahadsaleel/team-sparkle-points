@@ -39,6 +39,8 @@ const pointReasons = [
   { label: 'No daily task for 2 days (-5)', value: 'no_task', points: -5 },
   { label: 'Joining session on time (+2)', value: 'on_time', points: 2 },
   { label: 'Late (5+ min without informing) (-5)', value: 'late', points: -5 },
+  { label: 'Quiz Winner (+5)', value: 'quiz_winner', points: 5 },
+  { label: 'Quiz Second Place (+2)', value: 'quiz_second', points: 2 },
 ];
 
 const AdminPointsDialog = ({
