@@ -83,7 +83,7 @@ export const LogHistoryDialog = ({ open, onOpenChange }: LogHistoryDialogProps) 
           <DialogTitle>Log History (IST)</DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4">
+        <ScrollArea className="flex-1 h-[60vh] pr-4">
           {loading ? (
             <div className="text-center py-8">Loading logs...</div>
           ) : logs.length === 0 ? (
